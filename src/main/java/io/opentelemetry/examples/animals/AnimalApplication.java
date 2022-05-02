@@ -9,7 +9,7 @@ public class AnimalApplication {
 
   public static void main(String[] args) {
     // Configure OpenTelemetry as early as possible
-    OpenTelemetryConfig.configureGlobal("disney-app");
+    OpenTelemetryConfig.configureGlobal("animal-app");
     SpringApplication.run(AnimalApplication.class, args);
   }
 }

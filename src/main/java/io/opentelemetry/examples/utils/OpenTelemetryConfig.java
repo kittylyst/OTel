@@ -1,7 +1,10 @@
 package io.opentelemetry.examples.utils;
 
+import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.metrics.GlobalMeterProvider;
+import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
+import io.opentelemetry.context.Context;
 import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.exporter.otlp.internal.RetryPolicy;
 import io.opentelemetry.exporter.otlp.internal.grpc.DefaultGrpcExporterBuilder;
@@ -17,6 +20,7 @@ import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
 
+import java.net.http.HttpRequest;
 import java.time.Duration;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -78,6 +82,19 @@ public class OpenTelemetryConfig {
             .newMetricReaderFactory());
 
     GlobalMeterProvider.set(meterProviderBuilder.build());
+  }
+
+  /**
+   * Inject the {@code span}'s context into the {@code requestBuilder}.
+   *
+   * @param span the span
+   * @param requestBuilder the request builder
+   */
+  public static void injectContext(Span span, HttpRequest.Builder requestBuilder) {
+    var context = Context.current().with(span);
+    GlobalOpenTelemetry.getPropagators()
+            .getTextMapPropagator()
+            .inject(context, requestBuilder, HttpRequest.Builder::header);
   }
 
   private static Resource configureResource(String serviceName) {

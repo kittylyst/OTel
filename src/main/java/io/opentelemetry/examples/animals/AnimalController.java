@@ -4,7 +4,7 @@ import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.SpanKind;
 import io.opentelemetry.context.Context;
-import io.opentelemetry.context.propagation.TextMapGetter;
+import io.opentelemetry.examples.utils.HttpServletRequestExtractor;
 import io.opentelemetry.semconv.trace.attributes.SemanticAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -19,6 +19,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
+
+import static io.opentelemetry.examples.utils.OpenTelemetryConfig.injectContext;
 
 @RestController
 public class AnimalController {
@@ -93,32 +95,5 @@ public class AnimalController {
         .startSpan();
   }
 
-  /**
-   * Inject the {@code span}'s context into the {@code requestBuilder}.
-   *
-   * @param span the span
-   * @param requestBuilder the request builder
-   */
-  private static void injectContext(Span span, HttpRequest.Builder requestBuilder) {
-    var context = Context.current().with(span);
-    GlobalOpenTelemetry.getPropagators()
-        .getTextMapPropagator()
-        .inject(context, requestBuilder, HttpRequest.Builder::header);
-  }
 
-  /**
-   * A simple {@link TextMapGetter} implementation that extracts context from {@link
-   * HttpServletRequest} headers.
-   */
-  private static class HttpServletRequestExtractor implements TextMapGetter<HttpServletRequest> {
-    @Override
-    public Iterable<String> keys(HttpServletRequest carrier) {
-      return () -> carrier.getHeaderNames().asIterator();
-    }
-
-    @Override
-    public String get(HttpServletRequest carrier, String key) {
-      return carrier.getHeader(key);
-    }
-  }
 }
