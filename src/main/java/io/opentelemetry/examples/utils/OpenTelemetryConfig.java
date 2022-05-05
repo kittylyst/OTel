@@ -20,6 +20,7 @@ import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.http.HttpRequest;
 import java.time.Duration;
 import java.util.UUID;
@@ -97,6 +98,12 @@ public class OpenTelemetryConfig {
             .inject(context, requestBuilder, HttpRequest.Builder::header);
   }
 
+  public static Context extractContext(HttpServletRequest httpServletRequest , HttpServletRequestExtractor EXTRACTOR) {
+    return GlobalOpenTelemetry.getPropagators()
+            .getTextMapPropagator()
+            .extract(Context.current(), httpServletRequest, EXTRACTOR);
+  }
+
   private static Resource configureResource(String serviceName) {
     return Resource.getDefault()
         .merge(
@@ -108,5 +115,8 @@ public class OpenTelemetryConfig {
                 .build());
   }
 
+
+
   private OpenTelemetryConfig() {}
 }
+
