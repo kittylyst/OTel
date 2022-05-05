@@ -1,9 +1,10 @@
-package io.opentelemetry.examples.animals;
+package io.opentelemetry.examples.fish;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.SpanKind;
 import io.opentelemetry.context.Context;
+import io.opentelemetry.context.propagation.TextMapGetter;
 import io.opentelemetry.examples.utils.HttpServletRequestExtractor;
 import io.opentelemetry.semconv.trace.attributes.SemanticAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,47 +24,33 @@ import java.util.Map;
 import static io.opentelemetry.examples.utils.OpenTelemetryConfig.injectContext;
 
 @RestController
-public class AnimalController {
+public class FishController {
   private static final Map<String, String> PORTS = Map.of("mammals", "8081", "fish", "8083");
 
   private static final HttpServletRequestExtractor EXTRACTOR = new HttpServletRequestExtractor();
 
   @Autowired private HttpServletRequest httpServletRequest;
 
-  @GetMapping("/battle")
+  @GetMapping("/getAnimal")
   public String makeBattle() throws IOException, InterruptedException {
-    // Extract the propagated context from the request. In this example, no context will be
-    // extracted from the request since this route initializes the trace.
+    // Extract the propagated context from the request. In this example, context will be
+    // extracted from the Animal Service.
     var extractedContext = extractContext();
 
     try (var scope = extractedContext.makeCurrent()) {
       // Start a span in the scope of the extracted context.
-      var span = serverSpan("/battle", HttpMethod.GET.name());
+      var span = serverSpan("/getAnimal", HttpMethod.GET.name());
 
       // Send the two requests and return the response body as the response, and end the span.
       try {
-        var good = fetchAnimal(span);
-        var evil = fetchAnimal(span);
-        return "{ \"good\": \""+ good + "\", \"evil\": \""+ evil + "\" }";
+
+        return "salmenfish";
       } finally {
         span.end();
       }
     }
   }
 
-  private String fetchAnimal(Span span) throws IOException, InterruptedException {
-    List<String> keys = List.copyOf(PORTS.keySet());
-    var world = keys.get((int) (PORTS.size() * Math.random()));
-    var location = "http://localhost:"+ PORTS.get(world) +"/getAnimal";
-
-    var client = HttpClient.newHttpClient();
-    var requestBuilder = HttpRequest.newBuilder().uri(URI.create(location));
-
-    // Inject the span's content into the request's headers.
-    injectContext(span, requestBuilder);
-
-    return client.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString()).body();
-  }
 
   /**
    * Extract the propagated context from the {@link #httpServletRequest}.
@@ -85,7 +72,7 @@ public class AnimalController {
    * @return the span
    */
   private Span serverSpan(String path, String method) {
-    return GlobalOpenTelemetry.getTracer(AnimalController.class.getName())
+    return GlobalOpenTelemetry.getTracer(FishController.class.getName())
         .spanBuilder(path)
         .setSpanKind(SpanKind.SERVER)
         .setAttribute(SemanticAttributes.HTTP_METHOD, method)
@@ -94,6 +81,7 @@ public class AnimalController {
         .setAttribute(SemanticAttributes.HTTP_TARGET, path)
         .startSpan();
   }
+
 
 
 }
