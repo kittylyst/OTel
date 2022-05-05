@@ -21,6 +21,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
+import static io.opentelemetry.examples.utils.OpenTelemetryConfig.extractContext;
 import static io.opentelemetry.examples.utils.OpenTelemetryConfig.injectContext;
 
 @RestController
@@ -35,7 +36,8 @@ public class FishController {
   public String makeBattle() throws IOException, InterruptedException {
     // Extract the propagated context from the request. In this example, context will be
     // extracted from the Animal Service.
-    var extractedContext = extractContext();
+    var extractedContext = extractContext(httpServletRequest,EXTRACTOR);
+
 
     try (var scope = extractedContext.makeCurrent()) {
       // Start a span in the scope of the extracted context.
@@ -57,11 +59,7 @@ public class FishController {
    *
    * @return the extracted context
    */
-  private Context extractContext() {
-    return GlobalOpenTelemetry.getPropagators()
-        .getTextMapPropagator()
-        .extract(Context.current(), httpServletRequest, EXTRACTOR);
-  }
+
 
   /**
    * Create a {@link SpanKind#SERVER} span, setting the parent context if available from the {@link
