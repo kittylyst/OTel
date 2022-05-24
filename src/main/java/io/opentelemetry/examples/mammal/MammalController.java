@@ -46,7 +46,7 @@ public class MammalController {
             // Send the two requests and return the response body as the response, and end the span.
             try {
 
-                return "dog";
+                return "monkey";
             } finally {
                 span.end();
             }
