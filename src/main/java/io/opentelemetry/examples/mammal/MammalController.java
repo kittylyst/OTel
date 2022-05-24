@@ -46,21 +46,12 @@ public class MammalController {
             // Send the two requests and return the response body as the response, and end the span.
             try {
 
-                return "mammal";
+                return "dog";
             } finally {
                 span.end();
             }
         }
     }
-
-
-    /**
-     * Extract the propagated context from the {@link #httpServletRequest}.
-     *
-     * @return the extracted context
-     */
-
-
     /**
      * Create a {@link SpanKind#SERVER} span, setting the parent context if available from the {@link
      * #httpServletRequest}.
@@ -70,7 +61,7 @@ public class MammalController {
      * @return the span
      */
     private Span serverSpan(String path, String method) {
-        return GlobalOpenTelemetry.getTracer(io.opentelemetry.examples.fish.FishController.class.getName())
+        return GlobalOpenTelemetry.getTracer(io.opentelemetry.examples.mammal.MammalController.class.getName())
                 .spanBuilder(path)
                 .setSpanKind(SpanKind.SERVER)
                 .setAttribute(SemanticAttributes.HTTP_METHOD, method)
