@@ -70,7 +70,4 @@ public class MammalController {
                 .setAttribute(SemanticAttributes.HTTP_TARGET, path)
                 .startSpan();
     }
-
-
-
 }
