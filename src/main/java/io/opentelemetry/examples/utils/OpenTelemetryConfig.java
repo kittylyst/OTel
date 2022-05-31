@@ -32,12 +32,12 @@ import static io.opentelemetry.semconv.resource.attributes.ResourceAttributes.SE
 public class OpenTelemetryConfig {
 
   private static final Supplier<String> OTLP_HOST_SUPPLIER = () -> {
-    var ret = "http://localhost:4317";
-    var tmp = System.getenv("OTLP_HOST");
-    if (tmp != null & !tmp.equals("")) {
-      ret = tmp;
+    var defaultUrl = "http://localhost:4317";
+    var envUrl = System.getenv("OTLP_HOST");
+    if (envUrl == null || !envUrl.equals("")) {
+      return defaultUrl;
     }
-    return ret;
+    return envUrl;
   };
 
   public static void configureGlobal(String defaultServiceName) {
