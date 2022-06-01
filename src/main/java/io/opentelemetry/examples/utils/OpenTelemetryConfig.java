@@ -1,13 +1,10 @@
 package io.opentelemetry.examples.utils;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
-import io.opentelemetry.api.metrics.GlobalMeterProvider;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.propagation.ContextPropagators;
-import io.opentelemetry.exporter.otlp.internal.RetryPolicy;
-import io.opentelemetry.exporter.otlp.internal.grpc.DefaultGrpcExporterBuilder;
 import io.opentelemetry.exporter.otlp.metrics.OtlpGrpcMetricExporter;
 import io.opentelemetry.exporter.otlp.metrics.OtlpGrpcMetricExporterBuilder;
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
@@ -32,12 +29,12 @@ import static io.opentelemetry.semconv.resource.attributes.ResourceAttributes.SE
 public class OpenTelemetryConfig {
 
   private static final Supplier<String> OTLP_HOST_SUPPLIER = () -> {
-    var ret = "http://localhost:4317";
-    var tmp = System.getenv("OTLP_HOST");
-    if (tmp != null & !tmp.equals("")) {
-      ret = tmp;
+    var defaultUrl = "http://localhost:4317";
+    var envUrl = System.getenv("OTLP_HOST");
+    if (envUrl == null || !envUrl.equals("")) {
+      return defaultUrl;
     }
-    return ret;
+    return envUrl;
   };
 
   public static void configureGlobal(String defaultServiceName) {
@@ -50,9 +47,9 @@ public class OpenTelemetryConfig {
 //            .addHeader("api-key", "");
 
     // Enable retry policy via unstable API
-    DefaultGrpcExporterBuilder.getDelegateBuilder(
-            OtlpGrpcSpanExporterBuilder.class, spanExporterBuilder)
-        .addRetryPolicy(RetryPolicy.getDefault());
+//    DefaultGrpcExporterBuilder.getDelegateBuilder(
+//            OtlpGrpcSpanExporterBuilder.class, spanExporterBuilder)
+//        .addRetryPolicy(RetryPolicy.getDefault());
 
     var sdkTracerProviderBuilder =
         SdkTracerProvider.builder()
@@ -68,21 +65,20 @@ public class OpenTelemetryConfig {
 
     var metricExporterBuilder =
         OtlpGrpcMetricExporter.builder()
-            .setPreferredTemporality(AggregationTemporality.DELTA)
+//            .setPreferredTemporality(AggregationTemporality.DELTA)
             .setEndpoint(OTLP_HOST_SUPPLIER.get());
-//            .addHeader("api-key", );
 
     // Enable retry policy via unstable API
-    DefaultGrpcExporterBuilder.getDelegateBuilder(
-            OtlpGrpcMetricExporterBuilder.class, metricExporterBuilder)
-        .addRetryPolicy(RetryPolicy.getDefault());
+//    DefaultGrpcExporterBuilder.getDelegateBuilder(
+//            OtlpGrpcMetricExporterBuilder.class, metricExporterBuilder)
+//        .addRetryPolicy(RetryPolicy.getDefault());
 
-    meterProviderBuilder.registerMetricReader(
-        PeriodicMetricReader.builder(metricExporterBuilder.build())
+    meterProviderBuilder.registerMetricReader(PeriodicMetricReader.builder(metricExporterBuilder.build())
             .setInterval(Duration.ofSeconds(5))
-            .newMetricReaderFactory());
+            .build()).build();
 
-    GlobalMeterProvider.set(meterProviderBuilder.build());
+    // How do we register this in global context
+//    GlobalMeterProvider.set(meterProviderBuilder.build());
   }
 
   /**
