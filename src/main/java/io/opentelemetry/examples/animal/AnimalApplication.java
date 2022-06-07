@@ -1,4 +1,4 @@
-package io.opentelemetry.examples.animals;
+package io.opentelemetry.examples.animal;
 
 import io.opentelemetry.examples.utils.OpenTelemetryConfig;
 import org.springframework.boot.SpringApplication;

@@ -1,9 +1,8 @@
-package io.opentelemetry.examples.animals;
+package io.opentelemetry.examples.animal;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.SpanKind;
-import io.opentelemetry.context.Context;
 import io.opentelemetry.examples.utils.HttpServletRequestExtractor;
 import io.opentelemetry.semconv.trace.attributes.SemanticAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
