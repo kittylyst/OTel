@@ -3,5 +3,5 @@ USER root
 RUN mkdir /app
 COPY animals-demo-1.0-SNAPSHOT-jar-with-dependencies.jar  /app
 WORKDIR /app
-CMD ["java", "-jar" , "animals-demo-1.0-SNAPSHOT-jar-with-dependencies.jar"]
+CMD ["java", "-cp" , "animals-demo-1.0-SNAPSHOT-jar-with-dependencies.jar", "io.opentelemetry.examples.animals.AnimalApplication"]
 
