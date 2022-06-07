@@ -3,4 +3,4 @@ USER root
 RUN mkdir /app
 COPY animals-demo-1.0-SNAPSHOT-jar-with-dependencies.jar  /app
 WORKDIR /app
-CMD ["java", "-cp" , "animals-demo-1.0-SNAPSHOT-jar-with-dependencies.jar", "io.opentelemetry.examples.fish.FishApplication"]
+CMD ["java", "-cp" , "animals-demo-1.0-SNAPSHOT-jar-with-dependencies.jar", "io.opentelemetry.examples.fish.FishApplication", "--server.port=8081"]
