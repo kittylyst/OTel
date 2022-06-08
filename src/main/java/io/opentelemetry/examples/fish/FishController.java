@@ -26,8 +26,6 @@ import static io.opentelemetry.examples.utils.OpenTelemetryConfig.injectContext;
 
 @RestController
 public class FishController {
-  private static final Map<String, String> PORTS = Map.of("mammals", "8081", "fish", "8083");
-
   private static final HttpServletRequestExtractor EXTRACTOR = new HttpServletRequestExtractor();
 
   @Autowired private HttpServletRequest httpServletRequest;
@@ -45,8 +43,7 @@ public class FishController {
 
       // Send the two requests and return the response body as the response, and end the span.
       try {
-
-        return "salmenfish";
+        return "salmon";
       } finally {
         span.end();
       }
@@ -75,7 +72,7 @@ public class FishController {
         .setSpanKind(SpanKind.SERVER)
         .setAttribute(SemanticAttributes.HTTP_METHOD, method)
         .setAttribute(SemanticAttributes.HTTP_SCHEME, "http")
-        .setAttribute(SemanticAttributes.HTTP_HOST, "localhost:8083")
+        .setAttribute(SemanticAttributes.HTTP_HOST, "fish-service:8083")
         .setAttribute(SemanticAttributes.HTTP_TARGET, path)
         .startSpan();
   }

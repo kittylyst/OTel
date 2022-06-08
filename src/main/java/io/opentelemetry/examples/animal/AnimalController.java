@@ -24,7 +24,9 @@ import static io.opentelemetry.examples.utils.OpenTelemetryConfig.injectContext;
 
 @RestController
 public class AnimalController {
-  private static final Map<String, String> PORTS = Map.of("mammals", "8081", "fish", "8083");
+  private static final Map<String, String> SERVICES = Map.of(
+          "mammals", "http://mammal-service:8081/getAnimal",
+          "fish", "http://fish-service:8083/getAnimal");
 
   private static final HttpServletRequestExtractor EXTRACTOR = new HttpServletRequestExtractor();
 
@@ -52,12 +54,13 @@ public class AnimalController {
   }
 
   private String fetchAnimal(Span span) throws IOException, InterruptedException {
-    List<String> keys = List.copyOf(PORTS.keySet());
-    var world = keys.get((int) (PORTS.size() * Math.random()));
-    var location = "http://localhost:"+ PORTS.get(world) +"/getAnimal";
+    List<String> keys = List.copyOf(SERVICES.keySet());
+    var world = keys.get((int) (SERVICES.size() * Math.random()));
+//    var location = "http://localhost:"+ PORTS.get(world) +"/getAnimal";
+    var location = URI.create(SERVICES.get(world));
 
     var client = HttpClient.newHttpClient();
-    var requestBuilder = HttpRequest.newBuilder().uri(URI.create(location));
+    var requestBuilder = HttpRequest.newBuilder().uri(location);
 
     // Inject the span's content into the request's headers.
     injectContext(span, requestBuilder);
@@ -82,7 +85,7 @@ public class AnimalController {
         .setSpanKind(SpanKind.SERVER)
         .setAttribute(SemanticAttributes.HTTP_METHOD, method)
         .setAttribute(SemanticAttributes.HTTP_SCHEME, "http")
-        .setAttribute(SemanticAttributes.HTTP_HOST, "localhost:8080")
+        .setAttribute(SemanticAttributes.HTTP_HOST, "animal-service:8080")
         .setAttribute(SemanticAttributes.HTTP_TARGET, path)
         .startSpan();
   }

@@ -20,3 +20,21 @@ services:
       - "55681:55681" # OTLP HTTP receiver alternative port
     depends_on:
       - jaeger-all-in-one
+  # Fish service
+  fish-service:
+    image: fish_demo:latest
+    ports:
+      - "8083:8083"
+  # Mammal service
+  mammal-service:
+    image: mammal_demo:latest
+    ports:
+      - "8081:8081"
+  # Animal service
+  animal-service:
+    image: animals_demo:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - fish-service
+      - mammal-service

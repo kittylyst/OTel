@@ -26,8 +26,6 @@ import static io.opentelemetry.examples.utils.OpenTelemetryConfig.injectContext;
 
 @RestController
 public class MammalController {
-    private static final Map<String, String> PORTS = Map.of("mammals", "8081", "fish", "8083");
-
     private static final HttpServletRequestExtractor EXTRACTOR = new HttpServletRequestExtractor();
 
     @Autowired private HttpServletRequest httpServletRequest;
@@ -66,7 +64,7 @@ public class MammalController {
                 .setSpanKind(SpanKind.SERVER)
                 .setAttribute(SemanticAttributes.HTTP_METHOD, method)
                 .setAttribute(SemanticAttributes.HTTP_SCHEME, "http")
-                .setAttribute(SemanticAttributes.HTTP_HOST, "localhost:8080")
+                .setAttribute(SemanticAttributes.HTTP_HOST, "mammal-service:8081")
                 .setAttribute(SemanticAttributes.HTTP_TARGET, path)
                 .startSpan();
     }
