@@ -26,6 +26,8 @@ import static io.opentelemetry.examples.utils.OpenTelemetryConfig.injectContext;
 
 @RestController
 public class MammalController {
+    private final List<String> MAMMALS = List.of("monkey", "jaguar", "platypus");
+
     private static final HttpServletRequestExtractor EXTRACTOR = new HttpServletRequestExtractor();
 
     @Autowired private HttpServletRequest httpServletRequest;
@@ -41,10 +43,11 @@ public class MammalController {
             // Start a span in the scope of the extracted context.
             var span = serverSpan("/getAnimal", HttpMethod.GET.name());
 
-            // Send the two requests and return the response body as the response, and end the span.
             try {
-
-                return "monkey";
+                // Random pause
+                Thread.sleep((int) (20 * Math.random()));
+                // Return random mammal
+                return MAMMALS.get((int)(MAMMALS.size() * Math.random()));
             } finally {
                 span.end();
             }
