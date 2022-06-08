@@ -62,7 +62,7 @@ public class AnimalController {
     // Inject the span's content into the request's headers.
     injectContext(span, requestBuilder);
     var request = requestBuilder.build();
-    System.out.println(request);
+//    System.out.println(request);
 
     return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
   }
