@@ -29,7 +29,7 @@ import static io.opentelemetry.semconv.resource.attributes.ResourceAttributes.SE
 public class OpenTelemetryConfig {
 
   private static final Supplier<String> OTLP_HOST_SUPPLIER = () -> {
-    var defaultUrl = "http://localhost:4317";
+    var defaultUrl = "http://otel-collector:4317";
     var envUrl = System.getenv("OTLP_HOST");
     if (envUrl == null || !envUrl.equals("")) {
       return defaultUrl;

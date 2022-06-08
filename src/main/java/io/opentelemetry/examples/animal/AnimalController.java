@@ -56,7 +56,6 @@ public class AnimalController {
   private String fetchAnimal(Span span) throws IOException, InterruptedException {
     List<String> keys = List.copyOf(SERVICES.keySet());
     var world = keys.get((int) (SERVICES.size() * Math.random()));
-//    var location = "http://localhost:"+ PORTS.get(world) +"/getAnimal";
     var location = URI.create(SERVICES.get(world));
 
     var client = HttpClient.newHttpClient();
