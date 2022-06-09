@@ -44,7 +44,7 @@ public class FishController {
       }
     }
   }
-  
+
   /**
    * Create a {@link SpanKind#SERVER} span, setting the parent context if available from the {@link
    * #httpServletRequest}.
