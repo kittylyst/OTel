@@ -6,12 +6,9 @@ import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.exporter.otlp.metrics.OtlpGrpcMetricExporter;
-import io.opentelemetry.exporter.otlp.metrics.OtlpGrpcMetricExporterBuilder;
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
-import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporterBuilder;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
-import io.opentelemetry.sdk.metrics.data.AggregationTemporality;
 import io.opentelemetry.sdk.metrics.export.PeriodicMetricReader;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
@@ -29,7 +26,7 @@ import static io.opentelemetry.semconv.resource.attributes.ResourceAttributes.SE
 public class OpenTelemetryConfig {
 
   private static final Supplier<String> OTLP_HOST_SUPPLIER = () -> {
-    var defaultUrl = "http://localhost:4317";
+    var defaultUrl = "http://otel-collector:4317";
     var envUrl = System.getenv("OTLP_HOST");
     if (envUrl == null || !envUrl.equals("")) {
       return defaultUrl;

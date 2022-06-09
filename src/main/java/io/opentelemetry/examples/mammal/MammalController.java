@@ -26,7 +26,7 @@ import static io.opentelemetry.examples.utils.OpenTelemetryConfig.injectContext;
 
 @RestController
 public class MammalController {
-    private static final Map<String, String> PORTS = Map.of("mammals", "8081", "fish", "8083");
+    private final List<String> MAMMALS = List.of("monkey", "jaguar", "platypus");
 
     private static final HttpServletRequestExtractor EXTRACTOR = new HttpServletRequestExtractor();
 
@@ -43,10 +43,11 @@ public class MammalController {
             // Start a span in the scope of the extracted context.
             var span = serverSpan("/getAnimal", HttpMethod.GET.name());
 
-            // Send the two requests and return the response body as the response, and end the span.
             try {
-
-                return "monkey";
+                // Random pause
+                Thread.sleep((int) (20 * Math.random()));
+                // Return random mammal
+                return MAMMALS.get((int)(MAMMALS.size() * Math.random()));
             } finally {
                 span.end();
             }
@@ -66,7 +67,7 @@ public class MammalController {
                 .setSpanKind(SpanKind.SERVER)
                 .setAttribute(SemanticAttributes.HTTP_METHOD, method)
                 .setAttribute(SemanticAttributes.HTTP_SCHEME, "http")
-                .setAttribute(SemanticAttributes.HTTP_HOST, "localhost:8080")
+                .setAttribute(SemanticAttributes.HTTP_HOST, "mammal-service:8081")
                 .setAttribute(SemanticAttributes.HTTP_TARGET, path)
                 .startSpan();
     }

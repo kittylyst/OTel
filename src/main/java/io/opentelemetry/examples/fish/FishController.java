@@ -3,8 +3,6 @@ package io.opentelemetry.examples.fish;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.SpanKind;
-import io.opentelemetry.context.Context;
-import io.opentelemetry.context.propagation.TextMapGetter;
 import io.opentelemetry.examples.utils.HttpServletRequestExtractor;
 import io.opentelemetry.semconv.trace.attributes.SemanticAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.Map;
 
 import static io.opentelemetry.examples.utils.OpenTelemetryConfig.extractContext;
-import static io.opentelemetry.examples.utils.OpenTelemetryConfig.injectContext;
 
 @RestController
 public class FishController {
-  private static final Map<String, String> PORTS = Map.of("mammals", "8081", "fish", "8083");
-
   private static final HttpServletRequestExtractor EXTRACTOR = new HttpServletRequestExtractor();
+  private static final List<String> FISH = List.of("salmon", "cod", "turbot");
 
   @Autowired private HttpServletRequest httpServletRequest;
 
@@ -43,23 +34,16 @@ public class FishController {
       // Start a span in the scope of the extracted context.
       var span = serverSpan("/getAnimal", HttpMethod.GET.name());
 
-      // Send the two requests and return the response body as the response, and end the span.
       try {
-
-        return "salmenfish";
+        // Random pause
+        Thread.sleep((int) (20 * Math.random()));
+        // Return random fish
+        return FISH.get((int)(FISH.size() * Math.random()));
       } finally {
         span.end();
       }
     }
   }
-
-
-  /**
-   * Extract the propagated context from the {@link #httpServletRequest}.
-   *
-   * @return the extracted context
-   */
-
 
   /**
    * Create a {@link SpanKind#SERVER} span, setting the parent context if available from the {@link
@@ -75,7 +59,7 @@ public class FishController {
         .setSpanKind(SpanKind.SERVER)
         .setAttribute(SemanticAttributes.HTTP_METHOD, method)
         .setAttribute(SemanticAttributes.HTTP_SCHEME, "http")
-        .setAttribute(SemanticAttributes.HTTP_HOST, "localhost:8083")
+        .setAttribute(SemanticAttributes.HTTP_HOST, "fish-service:8083")
         .setAttribute(SemanticAttributes.HTTP_TARGET, path)
         .startSpan();
   }
