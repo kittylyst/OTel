@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static io.opentelemetry.examples.utils.OpenTelemetryConfig.extractContext;
+import static io.opentelemetry.examples.utils.OpenTelemetryConfig.serverSpan;
 
 @RestController
 public class FishController {
@@ -32,7 +33,7 @@ public class FishController {
 
     try (var scope = extractedContext.makeCurrent()) {
       // Start a span in the scope of the extracted context.
-      var span = serverSpan("/getAnimal", HttpMethod.GET.name());
+      var span = serverSpan("/getAnimal", HttpMethod.GET.name(), FishController.class.getName(), "fish-service:8083");
 
       try {
         // Random pause
@@ -44,26 +45,4 @@ public class FishController {
       }
     }
   }
-
-  /**
-   * Create a {@link SpanKind#SERVER} span, setting the parent context if available from the {@link
-   * #httpServletRequest}.
-   *
-   * @param path the HTTP path
-   * @param method the HTTP method
-   * @return the span
-   */
-  private Span serverSpan(String path, String method) {
-    return GlobalOpenTelemetry.getTracer(FishController.class.getName())
-        .spanBuilder(path)
-        .setSpanKind(SpanKind.SERVER)
-        .setAttribute(SemanticAttributes.HTTP_METHOD, method)
-        .setAttribute(SemanticAttributes.HTTP_SCHEME, "http")
-        .setAttribute(SemanticAttributes.HTTP_HOST, "fish-service:8083")
-        .setAttribute(SemanticAttributes.HTTP_TARGET, path)
-        .startSpan();
-  }
-
-
-
 }

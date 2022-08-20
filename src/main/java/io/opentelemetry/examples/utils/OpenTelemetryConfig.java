@@ -2,6 +2,7 @@ package io.opentelemetry.examples.utils;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.SpanKind;
 import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.propagation.ContextPropagators;
@@ -13,6 +14,7 @@ import io.opentelemetry.sdk.metrics.export.PeriodicMetricReader;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
+import io.opentelemetry.semconv.trace.attributes.SemanticAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.http.HttpRequest;
@@ -108,7 +110,23 @@ public class OpenTelemetryConfig {
                 .build());
   }
 
-
+  /**
+   * Create a {@link SpanKind#SERVER} span, setting the parent context if available
+   *
+   * @param path the HTTP path
+   * @param method the HTTP method
+   * @return the span
+   */
+  public static Span serverSpan(String path, String method, String tracerName, String serviceName) {
+    return GlobalOpenTelemetry.getTracer(tracerName)
+            .spanBuilder(path)
+            .setSpanKind(SpanKind.SERVER)
+            .setAttribute(SemanticAttributes.HTTP_METHOD, method)
+            .setAttribute(SemanticAttributes.HTTP_SCHEME, "http")
+            .setAttribute(SemanticAttributes.HTTP_HOST, serviceName)
+            .setAttribute(SemanticAttributes.HTTP_TARGET, path)
+            .startSpan();
+  }
 
   private OpenTelemetryConfig() {}
 }

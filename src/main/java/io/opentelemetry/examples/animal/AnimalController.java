@@ -1,10 +1,7 @@
 package io.opentelemetry.examples.animal;
 
-import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.SpanKind;
 import io.opentelemetry.examples.utils.HttpServletRequestExtractor;
-import io.opentelemetry.semconv.trace.attributes.SemanticAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +16,8 @@ import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
-import static io.opentelemetry.examples.utils.OpenTelemetryConfig.extractContext;
-import static io.opentelemetry.examples.utils.OpenTelemetryConfig.injectContext;
+import static io.opentelemetry.examples.utils.Misc.fetchAnimal;
+import static io.opentelemetry.examples.utils.OpenTelemetryConfig.*;
 
 @RestController
 public class AnimalController {
@@ -40,12 +37,12 @@ public class AnimalController {
 
     try (var scope = extractedContext.makeCurrent()) {
       // Start a span in the scope of the extracted context.
-      var span = serverSpan("/battle", HttpMethod.GET.name());
+      var span = serverSpan("/battle", HttpMethod.GET.name(), AnimalController.class.getName(), "animal-service:8080");
 
       // Send the two requests and return the response body as the response, and end the span.
       try {
-        var good = fetchAnimal(span);
-        var evil = fetchAnimal(span);
+        var good = fetchRandomAnimal(span);
+        var evil = fetchRandomAnimal(span);
         return "{ \"good\": \""+ good + "\", \"evil\": \""+ evil + "\" }";
       } finally {
         span.end();
@@ -53,41 +50,12 @@ public class AnimalController {
     }
   }
 
-  private String fetchAnimal(Span span) throws IOException, InterruptedException {
+  private String fetchRandomAnimal(Span span) throws IOException, InterruptedException {
     List<String> keys = List.copyOf(SERVICES.keySet());
     var world = keys.get((int) (SERVICES.size() * Math.random()));
-    var location = URI.create(SERVICES.get(world));
+    var location = SERVICES.get(world);
 
-    var client = HttpClient.newHttpClient();
-    var requestBuilder = HttpRequest.newBuilder().uri(location);
-
-    // Inject the span's content into the request's headers.
-    injectContext(span, requestBuilder);
-    var request = requestBuilder.build();
-//    System.out.println(request);
-
-    return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+    return fetchAnimal(span, world, location);
   }
-
-
-  /**
-   * Create a {@link SpanKind#SERVER} span, setting the parent context if available from the {@link
-   * #httpServletRequest}.
-   *
-   * @param path the HTTP path
-   * @param method the HTTP method
-   * @return the span
-   */
-  private Span serverSpan(String path, String method) {
-    return GlobalOpenTelemetry.getTracer(AnimalController.class.getName())
-        .spanBuilder(path)
-        .setSpanKind(SpanKind.SERVER)
-        .setAttribute(SemanticAttributes.HTTP_METHOD, method)
-        .setAttribute(SemanticAttributes.HTTP_SCHEME, "http")
-        .setAttribute(SemanticAttributes.HTTP_HOST, "animal-service:8080")
-        .setAttribute(SemanticAttributes.HTTP_TARGET, path)
-        .startSpan();
-  }
-
 
 }
