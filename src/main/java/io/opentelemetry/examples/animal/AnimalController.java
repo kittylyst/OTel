@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import static io.opentelemetry.examples.utils.Misc.fetchAnimal;
-import static io.opentelemetry.examples.utils.OpenTelemetryConfig.*;
 
 @RestController
 public class AnimalController {
@@ -27,31 +26,17 @@ public class AnimalController {
 
   @GetMapping("/battle")
   public String makeBattle() throws IOException, InterruptedException {
-    // Extract the propagated context from the request. In this example, no context will be
-    // extracted from the request since this route initializes the trace.
-    var extractedContext = extractContext(httpServletRequest,EXTRACTOR);
-
-    try (var scope = extractedContext.makeCurrent()) {
-      // Start a span in the scope of the extracted context.
-      var span = serverSpan("/battle", HttpMethod.GET.name(), AnimalController.class.getName(), "animal-service:8080");
-
-      // Send the two requests and return the response body as the response, and end the span.
-      try {
-        var good = fetchRandomAnimal(span);
-        var evil = fetchRandomAnimal(span);
-        return "{ \"good\": \""+ good + "\", \"evil\": \""+ evil + "\" }";
-      } finally {
-        span.end();
-      }
-    }
+    var good = fetchRandomAnimal();
+    var evil = fetchRandomAnimal();
+    return "{ \"good\": \""+ good + "\", \"evil\": \""+ evil + "\" }";
   }
 
-  private String fetchRandomAnimal(Span span) throws IOException, InterruptedException {
+  private String fetchRandomAnimal() throws IOException, InterruptedException {
     List<String> keys = List.copyOf(SERVICES.keySet());
     var world = keys.get((int) (SERVICES.size() * Math.random()));
     var location = SERVICES.get(world);
 
-    return fetchAnimal(span, world, location);
+    return fetchAnimal(location);
   }
 
 }
