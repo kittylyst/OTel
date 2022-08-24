@@ -29,7 +29,7 @@ public class OpenTelemetryConfig {
 
   private static final Supplier<String> OTLP_HOST_SUPPLIER = () -> {
     var defaultUrl = "http://otel-collector:4317";
-    var envUrl = System.getenv("OTLP_HOST");
+    var envUrl = System.getenv("OTLP_HOST"); // Maek URL not HOST
     if (envUrl == null || !envUrl.equals("")) {
       return defaultUrl;
     }
