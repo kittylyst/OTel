@@ -93,10 +93,10 @@ public class OpenTelemetryConfig {
             .inject(context, requestBuilder, HttpRequest.Builder::header);
   }
 
-  public static Context extractContext(HttpServletRequest httpServletRequest , HttpServletRequestExtractor EXTRACTOR) {
+  public static Context extractContext(HttpServletRequest httpServletRequest , HttpServletRequestExtractor extractor) {
     return GlobalOpenTelemetry.getPropagators()
             .getTextMapPropagator()
-            .extract(Context.current(), httpServletRequest, EXTRACTOR);
+            .extract(Context.current(), httpServletRequest, extractor);
   }
 
   private static Resource configureResource(String serviceName) {
