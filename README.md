@@ -1,7 +1,5 @@
 # Animal vs. Animal
 
-## Docker Details
-
 ## Description
 
 This project provides a simple structure to demonstrate distributed traces.
@@ -43,16 +41,18 @@ The tag name should match the contents of `docker-compose.yml`
 Currently, you need to build:
 
 ```
- fish-service:
- mustelid-service:
- feline-service:
- mammal-service:
- animal-service:
+animals_demo
+fish_demo
+mustelid_demo
+feline_demo
+mammal_demo
 ```
 
 
 ## Running the project
 
+In the deploy directory are a docker-compose YAML file and a collector config.
+
 ```shell
-# Run each app in a separate shell
+docker-compose up
 ```
