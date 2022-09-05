@@ -8,8 +8,20 @@ exporters:
   logging:
 
   jaeger:
-    endpoint: jaeger-all-in-one:14250
+    endpoint: 'jaeger-all-in-one:14250'
     insecure: true
+
+  prometheus:
+    # Is this where Prometheus will scrape from?
+    endpoint: 'otel-collector:8888'
+    namespace: animals-metrics
+#    const_labels:
+#      label1: value1
+#      'another label': spaced value
+    send_timestamps: true
+    metric_expiration: 180m
+    resource_to_telemetry_conversion:
+      enabled: true
 
 processors:
   batch:
@@ -24,3 +36,7 @@ service:
       receivers: [otlp]
       processors: [batch]
       exporters: [jaeger]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging,prometheus]
