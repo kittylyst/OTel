@@ -23,12 +23,12 @@ services:
   # Grafana
   grafana:
     container_name: grafana
-    image: grafana/grafana
+    image: grafana/grafana-oss:9.1.2-ubuntu
     ports:
       - "3000:3000"
     environment:
       - GF_PATHS_CONFIG=/config/grafana.ini
-    user: '104'
+    user: '472:0'
     volumes:
       - './config:/config'
       - './target/data/grafana:/var/lib/grafana'
