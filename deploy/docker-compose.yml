@@ -10,12 +10,9 @@ services:
       - "--storage.tsdb.path=/prometheus"
       - "--web.console.libraries=/usr/share/prometheus/console_libraries"
       - "--web.console.templates=/usr/share/prometheus/consoles"
-#      - "chown -R 65534:65534 /data"
-#      - "/bin/chmod -R 777 /data"
     ports:
       - "9090:9090"
-#    user: "1000:1000"
-    user: "65534:65534"
+    user: "65534:0"
     volumes:
       - './config:/config'
       - './target/data/prometheus:/prometheus'
@@ -41,6 +38,7 @@ services:
       - "16686:16686"
       - "14268"
       - "14250"
+
   # Collector
   otel-collector:
     image: otel/opentelemetry-collector:latest
