@@ -14,7 +14,7 @@ exporters:
   prometheus:
     # Is this where Prometheus will scrape from?
     endpoint: 'otel-collector:8888'
-    namespace: animals-metrics
+    namespace: /animals-metrics
 #    const_labels:
 #      label1: value1
 #      'another label': spaced value
