@@ -15,7 +15,7 @@ services:
     ports:
       - "9090:9090"
 #    user: "1000:1000"
-    user: "65534:65534"
+    user: "65534:0"
     volumes:
       - './config:/config'
       - './target/data/prometheus:/prometheus'
@@ -28,7 +28,7 @@ services:
       - "3000:3000"
     environment:
       - GF_PATHS_CONFIG=/config/grafana.ini
-    user: '472:0'
+    user: "472:0"
     volumes:
       - './config:/config'
       - './target/data/grafana:/var/lib/grafana'
