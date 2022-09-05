@@ -56,3 +56,7 @@ In the deploy directory are a docker-compose YAML file and a collector config.
 ```shell
 docker-compose up
 ```
+
+The deploy/target/ directory will need to be created, owned by root:root and must be writeable by group.
+If you don't do this, Grafana will fail to deploy.
+To fix this, do a `sudo chmod -R 775 target`
