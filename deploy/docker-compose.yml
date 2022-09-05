@@ -10,9 +10,12 @@ services:
       - "--storage.tsdb.path=/prometheus"
       - "--web.console.libraries=/usr/share/prometheus/console_libraries"
       - "--web.console.templates=/usr/share/prometheus/consoles"
+#      - "chown -R 65534:65534 /data"
+#      - "/bin/chmod -R 777 /data"
     ports:
       - "9090:9090"
-    user: "1000:1000"
+#    user: "1000:1000"
+    user: "65534:65534"
     volumes:
       - './config:/config'
       - './target/data/prometheus:/prometheus'
@@ -25,7 +28,7 @@ services:
       - "3000:3000"
     environment:
       - GF_PATHS_CONFIG=/config/grafana.ini
-    user: "1000:1000"
+    user: '104'
     volumes:
       - './config:/config'
       - './target/data/grafana:/var/lib/grafana'
