@@ -56,15 +56,24 @@ services:
   # Fish service
   fish-service:
     image: fish_demo:latest
+    ports:
+      - "8080:8080"
   # Mustelid service
   mustelid-service:
     image: mustelid_demo:latest
+    ports:
+      - "8080:8080"
   # Feline service
   feline-service:
     image: feline_demo:latest
+    ports:
+      - "8080:8080"
+
   # Mammal service
   mammal-service:
     image: mammal_demo:latest
+    ports:
+      - "8080:8080"
     depends_on:
       - feline-service
       - mustelid-service
