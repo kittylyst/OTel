@@ -67,7 +67,7 @@ services:
   feline-service:
     image: feline_demo:latest
     ports:
-      - "8084:8083"
+      - "8083:8083"
 
   # Mammal service
   mammal-service:
