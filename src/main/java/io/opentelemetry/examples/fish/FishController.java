@@ -1,5 +1,6 @@
 package io.opentelemetry.examples.fish;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.opentelemetry.examples.utils.HttpServletRequestExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,12 @@ public class FishController {
   private static final List<String> FISH = List.of("salmon", "cod", "turbot");
 
   @Autowired private HttpServletRequest httpServletRequest;
+
+  private final MeterRegistry registry;
+
+  public FishController(MeterRegistry registry) {
+    this.registry = registry;
+  }
 
   @GetMapping("/getAnimal")
   public String makeBattle() throws IOException, InterruptedException {
