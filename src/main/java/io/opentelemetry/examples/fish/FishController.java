@@ -16,7 +16,7 @@ public class FishController {
 
   @Autowired private HttpServletRequest httpServletRequest;
 
-  @GetMapping("/getAnimal")
+  @GetMapping("/animal")
   public String makeBattle() throws IOException, InterruptedException {
     // Random pause
     Thread.sleep((int) (20 * Math.random()));

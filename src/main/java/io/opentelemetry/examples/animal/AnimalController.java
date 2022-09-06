@@ -16,8 +16,8 @@ import static io.opentelemetry.examples.utils.Misc.fetchAnimal;
 @RestController
 public class AnimalController {
   private static final Map<String, String> SERVICES = Map.of(
-          "mammals", "http://mammal-service:8080/getAnimal",
-          "fish", "http://fish-service:8080/getAnimal");
+          "mammals", "http://mammal-service:8080/animal",
+          "fish", "http://fish-service:8080/animal");
 
   private final MeterRegistry registry;
 

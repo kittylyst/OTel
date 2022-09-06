@@ -22,7 +22,7 @@ public class MammalController {
 
     @Autowired private HttpServletRequest httpServletRequest;
 
-    @GetMapping("/getAnimal")
+    @GetMapping("/animal")
     public String makeBattle() throws IOException, InterruptedException {
         return fetchRandomAnimal();
     }
