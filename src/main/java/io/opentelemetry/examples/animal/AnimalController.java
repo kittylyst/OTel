@@ -1,9 +1,8 @@
 package io.opentelemetry.examples.animal;
 
-import io.opentelemetry.api.trace.Span;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.opentelemetry.examples.utils.HttpServletRequestExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,9 +19,15 @@ public class AnimalController {
           "mammals", "http://mammal-service:8081/getAnimal",
           "fish", "http://fish-service:8083/getAnimal");
 
+  private final MeterRegistry registry;
+
   private static final HttpServletRequestExtractor EXTRACTOR = new HttpServletRequestExtractor();
 
   @Autowired private HttpServletRequest httpServletRequest;
+
+  public AnimalController(MeterRegistry registry) {
+    this.registry = registry;
+  }
 
   @GetMapping("/battle")
   public String makeBattle() throws IOException, InterruptedException {
