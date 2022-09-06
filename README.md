@@ -32,21 +32,15 @@ This will generate a shaded JAR that can be picked up by the following steps:
 
 The project is deployed using Docker. Each separate subcomponent needs a separate container, they are built like this:
 
-```shell
+```
 docker build -t animals_demo -f src/main/docker/animal/Dockerfile target/
+docker build -t feline_demo -f src/main/docker/animal/Dockerfile target/
+docker build -t fish_demo -f src/main/docker/animal/Dockerfile target/
+docker build -t mammal_demo -f src/main/docker/animal/Dockerfile target/
+docker build -t mustelid_demo -f src/main/docker/animal/Dockerfile target/
 ```
 
-The tag name should match the contents of `docker-compose.yml`
-
-Currently, you need to build:
-
-```
-animals_demo
-feline_demo
-fish_demo
-mammal_demo
-mustelid_demo
-```
+That is, the tag name should match the contents of `docker-compose.yml`
 
 
 ## Running the project

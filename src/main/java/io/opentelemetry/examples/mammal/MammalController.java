@@ -15,8 +15,8 @@ import static io.opentelemetry.examples.utils.Misc.fetchAnimal;
 @RestController
 public class MammalController {
     private static final Map<String, String> SERVICES = Map.of(
-            "mustelids", "http://mustelid-service:8080/getAnimal",
-            "felines", "http://feline-service:8080/getAnimal");
+            "mustelids", "http://mustelid-service:8084/getAnimal",
+            "felines", "http://feline-service:8083/getAnimal");
 
     private static final HttpServletRequestExtractor EXTRACTOR = new HttpServletRequestExtractor();
 
