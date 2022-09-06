@@ -19,6 +19,5 @@ public class Misc {
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-
     private Misc() {}
 }
