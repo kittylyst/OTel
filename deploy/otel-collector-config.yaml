@@ -12,11 +12,7 @@ exporters:
     endpoint: 'jaeger-all-in-one:14250'
     insecure: true
 
-<<<<<<< HEAD
   # Expect metrics like process.runtime.jvm.threads.count from OTel auto-instrument
-=======
-  # Expect metrics like process.runtime.jvm.threads.count from OTel auto-instrument    
->>>>>>> 9852498eef3f5462350eb77a8ee87125d61e7f78
   prometheusremotewrite:
     endpoint: "http://prom:9090/api/v1/push"
 
