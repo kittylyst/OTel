@@ -5,4 +5,4 @@ RUN microdnf install net-tools
 COPY animals-demo-1.0-SNAPSHOT-jar-with-dependencies.jar  /app
 COPY opentelemetry-javaagent.jar  /app
 WORKDIR /app
-CMD ["java", "-cp" , "animals-demo-1.0-SNAPSHOT-jar-with-dependencies.jar", "io.opentelemetry.examples.animal.AnimalApplication", "--server.port=8082"]
+CMD ["java", "-cp" , "animals-demo-1.0-SNAPSHOT-jar-with-dependencies.jar", "io.opentelemetry.examples.animal.AnimalApplication"]
