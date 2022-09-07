@@ -1,7 +1,5 @@
 # Animal vs. Animal
 
-## Docker Details
-
 ## Description
 
 This project provides a simple structure to demonstrate distributed traces.
@@ -34,25 +32,27 @@ This will generate a shaded JAR that can be picked up by the following steps:
 
 The project is deployed using Docker. Each separate subcomponent needs a separate container, they are built like this:
 
-```shell
+```
 docker build -t animals_demo -f src/main/docker/animal/Dockerfile target/
+docker build -t feline_demo -f src/main/docker/animal/Dockerfile target/
+docker build -t fish_demo -f src/main/docker/animal/Dockerfile target/
+docker build -t mammal_demo -f src/main/docker/animal/Dockerfile target/
+docker build -t mustelid_demo -f src/main/docker/animal/Dockerfile target/
 ```
 
-The tag name should match the contents of `docker-compose.yml`
-
-Currently, you need to build:
-
-```
- fish-service:
- mustelid-service:
- feline-service:
- mammal-service:
- animal-service:
-```
+That is, the tag name should match the contents of `docker-compose.yml`
 
 
 ## Running the project
 
+In the deploy directory are a docker-compose YAML file and a collector config.
+
 ```shell
-# Run each app in a separate shell
+docker-compose up
 ```
+
+## Known Issues
+
+The deploy/target/ directory will need to be created, owned by root:root and must be writeable by group.
+If you don't do this, Grafana will fail to deploy.
+To fix this, do a `sudo chmod -R 775 target`
