@@ -1,6 +1,7 @@
 package io.opentelemetry.examples.animal;
 
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import io.opentelemetry.examples.utils.HttpServletRequestExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
