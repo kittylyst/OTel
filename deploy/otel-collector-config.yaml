@@ -40,4 +40,4 @@ service:
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging,prometheusremotewrite]
+      exporters: [logging,prometheus]
