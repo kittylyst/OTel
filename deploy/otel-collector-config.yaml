@@ -11,17 +11,21 @@ exporters:
     endpoint: 'jaeger-all-in-one:14250'
     insecure: true
 
-  prometheus:
-    # Is this where Prometheus will scrape from?
-    endpoint: "otel-collector:7878"
-    namespace: /animals-metrics
-#    const_labels:
-#      label1: value1
-#      'another label': spaced value
-    send_timestamps: true
-    metric_expiration: 180m
-    resource_to_telemetry_conversion:
-      enabled: true
+  # Expect metrics like process.runtime.jvm.threads.count from OTel auto-instrument
+  prometheusremotewrite:
+    endpoint: "http://prom:9090/api/v1/push"
+
+#  prometheus:
+#    # Is this remote write?
+#    endpoint: "prom:9090"
+#    namespace: /animals-metrics
+##    const_labels:
+##      label1: value1
+##      'another label': spaced value
+#    send_timestamps: true
+#    metric_expiration: 180m
+#    resource_to_telemetry_conversion:
+#      enabled: true
 
 processors:
   batch:
@@ -39,4 +43,4 @@ service:
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging,prometheus]
+      exporters: [logging,prometheusremotewrite]
