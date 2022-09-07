@@ -32,21 +32,15 @@ This will generate a shaded JAR that can be picked up by the following steps:
 
 The project is deployed using Docker. Each separate subcomponent needs a separate container, they are built like this:
 
-```shell
+```
 docker build -t animals_demo -f src/main/docker/animal/Dockerfile target/
+docker build -t feline_demo -f src/main/docker/animal/Dockerfile target/
+docker build -t fish_demo -f src/main/docker/animal/Dockerfile target/
+docker build -t mammal_demo -f src/main/docker/animal/Dockerfile target/
+docker build -t mustelid_demo -f src/main/docker/animal/Dockerfile target/
 ```
 
-The tag name should match the contents of `docker-compose.yml`
-
-Currently, you need to build:
-
-```
-animals_demo
-fish_demo
-mustelid_demo
-feline_demo
-mammal_demo
-```
+That is, the tag name should match the contents of `docker-compose.yml`
 
 
 ## Running the project
@@ -57,6 +51,11 @@ In the deploy directory are a docker-compose YAML file and a collector config.
 docker-compose up
 ```
 
+## Known Issues
+
 The deploy/target/ directory will need to be created, owned by root:root and must be writeable by group.
 If you don't do this, Grafana will fail to deploy.
 To fix this, do a `sudo chmod -R 775 target`
+
+Spring Boot appears to stop recognizing the `--server.port` argument when run with the OTel Java Agent.
+Switching to remapped ports instead.
