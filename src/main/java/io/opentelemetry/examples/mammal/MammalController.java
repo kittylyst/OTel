@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.opentelemetry.examples.utils.Misc.fetchAnimal;
 
@@ -25,12 +26,16 @@ public class MammalController {
 
     private final MeterRegistry registry;
 
+    private final AtomicInteger mammmalsTotal;
+
     public MammalController(MeterRegistry registry) {
         this.registry = registry;
+        this.mammmalsTotal = registry.gauge("mammals.total", new AtomicInteger(0));
     }
 
     @GetMapping("/getAnimal")
     public String makeBattle() throws IOException, InterruptedException {
+        mammmalsTotal.incrementAndGet();
         return fetchRandomAnimal();
     }
 

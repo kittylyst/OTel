@@ -28,7 +28,13 @@ To build the project, use:
 mvn clean package
 ```
 
-This will generate a shaded JAR that can be picked up by the following steps:
+This will generate a shaded JAR that can be picked up by the following steps.
+
+For the OTel agent, it will need to be manually copied into the `target/` directory, like this:
+
+```shell
+cp opentelemetry-javaagent.jar target/
+```
 
 The project is deployed using Docker. Each separate subcomponent needs a separate container, they are built like this:
 
